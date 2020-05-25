@@ -116,6 +116,7 @@ public class AppTest {
         Assert.assertTrue(driver.getCurrentUrl().equals("https://digitalnizena.cz/church/Menu.php"));
         Assert.assertTrue(driver.getTitle().equals("ChurchCRM: Welcome to"));
         Assert.assertTrue(driver.findElements(By.id("Login")).isEmpty());
+
     }
 
 
