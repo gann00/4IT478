@@ -26,6 +26,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class PeopleTest {
     private ChromeDriver driver;
+    private LoginTest loginTest = new LoginTest();
 
     @Before
     public void setup() {
@@ -44,28 +45,10 @@ public class PeopleTest {
     }
 
     @Test
-    public void shouldLoginUsingValidCredentials() {
-        // given
-        driver.get("http://digitalnizena.cz/church/");
-
-        // when
-        WebElement usernameInput = driver.findElement(By.id("UserBox"));
-        usernameInput.sendKeys("church");
-        WebElement passwordInput = driver.findElement(By.id("PasswordBox"));
-        passwordInput.sendKeys("church12345");
-        WebElement loginButton = driver.findElement(By.className("btn-primary"));
-        loginButton.click();
-        // Then
-        assertEquals("http://digitalnizena.cz/church/Menu.php", driver.getCurrentUrl());
-        assertEquals("ChurchCRM: Welcome to", driver.getTitle());
-        assertTrue(driver.findElements(By.id("Login")).isEmpty());
-    }
-
-    @Test
     public void addingPersonFail() {
         //Test for adding Person with empty Family and empty Last name
         // Given
-        shouldLoginUsingValidCredentials();
+        loginTest.login(driver);
 
         // When
         // Go through menu to People
@@ -97,22 +80,28 @@ public class PeopleTest {
     }
 
     @Test
-    public void addingPerson() {
+    public void addingFamily() {
         // Given
-        shouldLoginUsingValidCredentials();
-
+        loginTest.login(driver);
         // When
         // Adding Family
-        //driver.get("http://digitalnizena.cz/church/FamilyEditor.php");
-        //WebElement familyName = driver.findElement(By.id("FamilyName"));
-        //familyName.sendKeys("Smith");
+        driver.get("http://digitalnizena.cz/church/FamilyEditor.php");
+        WebElement familyName = driver.findElement(By.id("FamilyName"));
+        familyName.sendKeys("Smith");
 
-        //WebElement cityInput = driver.findElement(By.name("City"));
-        //cityInput.sendKeys("Prague");
+        WebElement cityInput = driver.findElement(By.name("City"));
+        cityInput.sendKeys("Prague");
 
-        //WebElement personSaveButton = driver.findElement(By.name("FamilySubmit"));
-        //personSaveButton.click();
+        WebElement personSaveButton = driver.findElement(By.name("FamilySubmit"));
+        personSaveButton.click();
+    }
 
+    @Test
+    public void addingPerson() {
+        // Given
+        loginTest.login(driver);
+
+        // When
         //Adding Person with family and with empty Last name
         driver.get("http://digitalnizena.cz/church/PersonEditor.php");
 
@@ -147,31 +136,44 @@ public class PeopleTest {
 
         WebElement personEditSave = driver.findElement(By.id("PersonSaveButton"));
         personEditSave.click();
+        driver.close();
+    }
+    @Test
+    public void editsSaved() {
+        // Given
+        loginTest.login(driver);
         //Check if edits were saved
+        driver.get("http://digitalnizena.cz/church/PersonView.php?PersonID=144");
+        WebElement emailSaved= driver.findElement(By.cssSelector("body > div > div.content-wrapper > section.content > div.row > div.col-lg-3.col-md-3.col-sm-3 > div:nth-child(2) > div.box-body > ul > li:nth-child(4) > span > a"));
+        Assert.assertEquals("janesmith@email.com", emailSaved.getText());
+        WebElement roleSaved = driver.findElement(By.className("text-muted"));
+        Assert.assertEquals("Head of Household  ", roleSaved.getText());
+        driver.close();
+    }
 
+    @Test
+    public void checkEditHistory() {
+        loginTest.login(driver);
         //Check edit history
+        driver.get("http://digitalnizena.cz/church/PersonView.php?PersonID=129");
 
+        WebElement history = driver.findElement(By.className("timeline-header"));
+        Assert.assertEquals("Updated by Church Admin", history.getText());
+        driver.close();
+    }
+
+    @Test
+    public void personListings() {
+        loginTest.login(driver);
         //Person Listings - check if person where added
-
-        WebElement peopleMenu = driver.findElement(By.className("fa-users"));
-        peopleMenu.click();
-        //WebElement addPeopleMenu = driver.findElement(By.xpath("/html/body/div/aside[1]/section/ul/li[3]/ul/li[2]"));
-        //addPeopleMenu.click();
-        driver.get("http://digitalnizena.cz/church/PersonEditor.php");
-
-
-        // Then
-
         driver.get("http://digitalnizena.cz/church/v2/people");
 
         WebElement searchInput = driver.findElement(By.cssSelector("#members_filter input"));
         searchInput.sendKeys("Jane Smith");
 
         List<WebElement> elements = driver.findElements(By.cssSelector("table#members tr"));
-        Assert.assertEquals(2, elements.size());
-
-        WebElement personTableRow = elements.get(0);
-        Assert.assertTrue(personTableRow.getText().contains("Smith"));
+        WebElement personTableRow = elements.get(7);
+        Assert.assertEquals("Smith Jane janesmith@email.com Female Unassigned Head of Household", personTableRow.getText());
        // driver.close();
     }
 }
