@@ -42,51 +42,70 @@ public class DepositListingTest {
         // GIVEN user is logged in
         shouldLoginUsingValidCredentials();
 
+       // WHEN user adds deposit comment
+       driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
 
-
-
-        // WHEN user adds deposit comment
-        driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
-
-        //100 zázmaov
-       WebElement recordsLenghtElement = driver.findElement(By.name("depositsTable_length"));
+       //Display 100 records
+       WebElement recordsLenghtElement = driver.findElementByName("depositsTable_length");
        Select recordsLenght = new Select(recordsLenghtElement);
        recordsLenght.selectByValue("100");
 
-
+        //Fill Deposit Comment
         WebElement depositCommentInput = driver.findElement(By.cssSelector("#depositComment"));
         String uuid = UUID.randomUUID().toString();
-        String depositComment = "deposit-AAA-" + uuid;
+        String depositComment = "Unique-Deposit-" + uuid;
         depositCommentInput.sendKeys(depositComment);
 
+        //Fill Deposite Date
         WebElement depositDateInput = driver.findElement(By.cssSelector("#depositDate"));
         depositDateInput.click();
         depositDateInput.clear();
         depositDateInput.sendKeys("2020-05-27");
 
+        //Button click Add New Deposit
         WebElement addDepositButton = driver.findElement(By.cssSelector("#addNewDeposit"));
         addDepositButton.click();
 
         // THEN newly added deposit should be shown in deposits table grid
 
-        // option2 - use custom "expected condition" of WebDriver framework
-        WebDriverWait wait = new WebDriverWait(driver, 2);     // timeout after 2 seconds
-        wait.until((ExpectedCondition<Boolean>) webDriver -> {
-                    // each time, we try to get the very first row from table grid and check, if contains the last record
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        WebElement searchDepositComment = driver.findElementByCssSelector("#depositsTable_wrapper #depositsTable tbody tr");
 
-                    List<WebElement> depositRows = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr"));
-                    WebElement firstRow = depositRows.get(0);
-                    String innerHTML = firstRow.getAttribute("innerHTML");
 
-                    if (innerHTML.contains(uuid)) {
-                        assertTrue(innerHTML.contains("10-30-18"));    // beware, different date format in table grid vs. input field
-                        assertTrue(innerHTML.contains(depositComment));
-                        return true;     // expected condition is met
-                    } else {
-                        return false;    // selenium webdriver will continue polling the DOM each 500ms and check the expected condition by calling method apply(webDriver) again
-                    }
-                }
-        );}
+      //  WebDriverWait wait = new WebDriverWait(driver, 2);
+      //  wait.until(ExpectedCondition<boolean>)webDriver -> {
+      //      List<WebElement> depositRows = driver.findElementsByCssSelector("#depositsTable_wrapper #depositsTable tbody tr");
+      //      WebElement firstRow = depositRows.get(0)
+        //    String innerHTML = firstRow.getAttribute("innerHTML");
+       // }
+   // }
+
+    // option2 - use custom "expected condition" of WebDriver framework
+    //WebDriverWait wait = new WebDriverWait(driver, 2);     // timeout after 2 seconds
+     //   wait.until((ExpectedCondition<Boolean>) webDriver -> {
+        // each time, we try to get the very first row from table grid and check, if contains the last record
+
+      //  List<WebElement> depositRows = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr"));
+      //  WebElement firstRow = depositRows.get(0);
+      //  String innerHTML = firstRow.getAttribute("innerHTML");
+
+        // if (innerHTML.contains(uuid)) {
+        //    assertTrue(innerHTML.contains("Unique-Deposit-"));    // beware, different date format in table grid vs. input field
+        //    assertTrue(innerHTML.contains(depositComment));
+        //    return true;     // expected condition is met
+       // } else {
+        //    return false;    // selenium webdriver will continue polling the DOM each 500ms and check the expected condition by calling method apply(webDriver) again
+       // }
+      // );
+
+
+
+    }
+
+
+
+
+
 
     public void deleteDeposits() throws InterruptedException {
         shouldLoginUsingValidCredentials();
