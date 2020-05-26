@@ -94,6 +94,7 @@ public class PeopleTest {
 
         WebElement personSaveButton = driver.findElement(By.name("FamilySubmit"));
         personSaveButton.click();
+        driver.close();
     }
 
     @Test
@@ -174,7 +175,7 @@ public class PeopleTest {
         List<WebElement> elements = driver.findElements(By.cssSelector("table#members tr"));
         WebElement personTableRow = elements.get(7);
         Assert.assertEquals("Smith Jane janesmith@email.com Female Unassigned Head of Household", personTableRow.getText());
-       // driver.close();
+        driver.close();
     }
 }
 
