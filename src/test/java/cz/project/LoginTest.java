@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit test for simple App.
+ * Unit tests for simple App ChurchCRM.
  */
 public class LoginTest {
     private ChromeDriver driver;
@@ -32,34 +32,16 @@ public class LoginTest {
         ChromeOptions cho = new ChromeOptions();
 
         System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver.exe");
-//        ChromeDriverService service = new ChromeDriverService()
         driver = new ChromeDriver(cho);
         driver.manage().window().maximize();
     }
 
     @After
     public void tearDown() {
-      driver.close();
+        driver.close();
+
+
     }
-
-    @Test
-    public void invalidLoginUsingInvalidUsernameAndInvalidPassword_userStaysAtLoginPage() {
-        // given
-        driver.get("http://digitalnizena.cz/church/");
-
-        // when
-        WebElement usernameInput = driver.findElement(By.id("UserBox"));
-        usernameInput.sendKeys("invalidlogin");
-        WebElement passwordInput = driver.findElement(By.id("PasswordBox"));
-        passwordInput.sendKeys("invalidpass");
-        WebElement loginButton = driver.findElement(By.className("btn-primary"));
-        loginButton.click();
-        // then
-        // validation error exists
-        WebElement errorMessageSpan = driver.findElement(By.id("spanMessage"));
-        Assert.assertEquals("Invalid credentials", errorMessageSpan.getText());
-    }
-
     @Test
     public void shouldLoginUsingValidCredentials() {
         // given
@@ -72,6 +54,7 @@ public class LoginTest {
         passwordInput.sendKeys("church12345");
         WebElement loginButton = driver.findElement(By.className("btn-primary"));
         loginButton.click();
+
         // Then
         assertEquals("http://digitalnizena.cz/church/Menu.php", driver.getCurrentUrl());
         assertEquals("ChurchCRM: Welcome to", driver.getTitle());
@@ -81,4 +64,48 @@ public class LoginTest {
 
 
 
+    @Test
+    public void shouldNotLoginInvalidCredentials_userStaysAtLoginPage_Fail() {
+        // given
+        driver.get("http://digitalnizena.cz/church/");
+
+        // when
+        WebElement usernameInput = driver.findElement(By.id("UserBox"));
+        usernameInput.sendKeys("invalidlogin");
+        WebElement passwordInput = driver.findElement(By.id("PasswordBox"));
+        passwordInput.sendKeys("invalidpass");
+        WebElement loginButton = driver.findElement(By.className("btn-primary"));
+        loginButton.click();
+
+        // then
+        // validation error exists
+        WebElement errorMessageSpan = driver.findElement(By.id("spanMessage"));
+        Assert.assertEquals("Invalid credentials", errorMessageSpan.getText());
+    }
+
+
+
+
+    @Test
+    public void shouldNotLoginInvalidCredentials_userStaysAtLoginPage_Pass() {
+        // given
+        driver.get("http://digitalnizena.cz/church/");
+
+        // when
+        WebElement usernameInput = driver.findElement(By.id("UserBox"));
+        usernameInput.sendKeys("invalidlogin");
+        WebElement passwordInput = driver.findElement(By.id("PasswordBox"));
+        passwordInput.sendKeys("invalidpass");
+        WebElement loginButton = driver.findElement(By.className("btn-primary"));
+        loginButton.click();
+
+        // then
+        // validation error exists
+        Assert.assertTrue(driver.getTitle().contentEquals("Login"));
+        WebElement loginForm = driver.findElement(By.className("login-box-body"));
+        Assert.assertTrue(loginForm.isDisplayed());
+
+
+
+    }
 }
