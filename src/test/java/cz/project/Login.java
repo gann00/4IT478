@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Unit test for simple App.
  */
-public class InvalidLogin {
+public class Login {
     private ChromeDriver driver;
 
     @Before
@@ -59,6 +59,26 @@ public class InvalidLogin {
         WebElement errorMessageSpan = driver.findElement(By.id("spanMessage"));
         Assert.assertEquals("Invalid credentials", errorMessageSpan.getText());
     }
+
+    @Test
+    public void shouldLoginUsingValidCredentials() {
+        // given
+        driver.get("http://digitalnizena.cz/church/");
+
+        // when
+        WebElement usernameInput = driver.findElement(By.id("UserBox"));
+        usernameInput.sendKeys("church");
+        WebElement passwordInput = driver.findElement(By.id("PasswordBox"));
+        passwordInput.sendKeys("church12345");
+        WebElement loginButton = driver.findElement(By.className("btn-primary"));
+        loginButton.click();
+        // Then
+        assertEquals("http://digitalnizena.cz/church/Menu.php", driver.getCurrentUrl());
+        assertEquals("ChurchCRM: Welcome to", driver.getTitle());
+        assertTrue(driver.findElements(By.id("Login")).isEmpty());
+
+    }
+
 
 
 }
