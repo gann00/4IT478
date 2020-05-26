@@ -76,12 +76,12 @@ public class PeopleTest {
         driver.get("http://digitalnizena.cz/church/PersonEditor.php");
 
         //Add new person
-        WebElement genderSelectElement = driver.findElement(By.name("Gender"));
-        Select genderSelect = new Select(genderSelectElement);
-        genderSelect.selectByVisibleText("Male");
+        WebElement genderSelectElementa = driver.findElement(By.name("Gender"));
+        Select gendersSelect = new Select(genderSelectElementa);
+        gendersSelect.selectByVisibleText("Male");
 
-        WebElement firstNameInput = driver.findElement(By.id("FirstName"));
-        firstNameInput.sendKeys("Kate");
+        WebElement firstName = driver.findElement(By.id("FirstName"));
+        firstName.sendKeys("Kate");
 
         WebElement personSaveButton = driver.findElement(By.id("PersonSaveButton"));
         personSaveButton.click();
@@ -138,12 +138,15 @@ public class PeopleTest {
         WebElement personEditButton = driver.findElement(By.id("EditPerson"));
         personEditButton.click();
 
-        WebElement genderSelectElemen = driver.findElement(By.name("Gender"));
-        Select genderSelect = new Select(genderSelectElement);
-        genderSelect.selectByVisibleText("Female");
+        WebElement familyRole = driver.findElement(By.name("FamilyRole"));
+        Select familyRoleSelect = new Select(familyRole);
+        familyRoleSelect.selectByValue("1");
 
-        WebElement firstName = driver.findElement(By.id("FirstName"));
-        firstName.sendKeys("Jane");
+        WebElement email = driver.findElement(By.name("Email"));
+        email.sendKeys("janesmith@email.com");
+
+        WebElement personEditSave = driver.findElement(By.id("PersonSaveButton"));
+        personEditSave.click();
         //Check if edits were saved
 
         //Check edit history
