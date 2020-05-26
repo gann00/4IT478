@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 public class EventTest {
     private ChromeDriver driver;
+    private LoginTest loginTest = new LoginTest();
 
     @Before
     public void setup() {
@@ -35,28 +36,9 @@ public class EventTest {
     }
 
     @Test
-    public void shouldLoginUsingValidCredentials() {
-        // given
-        driver.get("http://digitalnizena.cz/church/");
-
-        // when
-        WebElement usernameInput = driver.findElement(By.id("UserBox"));
-        usernameInput.sendKeys("church");
-        WebElement passwordInput = driver.findElement(By.id("PasswordBox"));
-        passwordInput.sendKeys("church12345");
-        WebElement loginButton = driver.findElement(By.className("btn-primary"));
-        loginButton.click();
-        // Then
-        assertEquals("http://digitalnizena.cz/church/Menu.php", driver.getCurrentUrl());
-        assertEquals("ChurchCRM: Welcome to", driver.getTitle());
-        assertTrue(driver.findElements(By.id("Login")).isEmpty());
-
-    }
-
-    @Test
     public void addingEventAndTextInRichTextEditor() {
         // GIVEN
-        shouldLoginUsingValidCredentials();
+        loginTest.login(driver);
 
 
         // WHEN
