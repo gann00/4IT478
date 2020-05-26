@@ -42,32 +42,35 @@ public class DepositListingTest {
         // GIVEN user is logged in
         shouldLoginUsingValidCredentials();
 
+       // WHEN user adds deposit comment
+       driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
 
-
-
-        // WHEN user adds deposit comment
-        driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
-
-        //100 zázmaov
-       WebElement recordsLenghtElement = driver.findElement(By.name("depositsTable_length"));
+       //Display 100 records
+       WebElement recordsLenghtElement = driver.findElementByName("depositsTable_length");
        Select recordsLenght = new Select(recordsLenghtElement);
        recordsLenght.selectByValue("100");
 
-
+        //Fill Deposit Comment
         WebElement depositCommentInput = driver.findElement(By.cssSelector("#depositComment"));
         String uuid = UUID.randomUUID().toString();
-        String depositComment = "deposit-AAA-" + uuid;
+        String depositComment = "Unique-Deposit-" + uuid;
         depositCommentInput.sendKeys(depositComment);
 
+        //Fill Deposite Date
         WebElement depositDateInput = driver.findElement(By.cssSelector("#depositDate"));
         depositDateInput.click();
         depositDateInput.clear();
         depositDateInput.sendKeys("2020-05-27");
 
+        //Button click Add New Deposit
         WebElement addDepositButton = driver.findElement(By.cssSelector("#addNewDeposit"));
         addDepositButton.click();
 
         // THEN newly added deposit should be shown in deposits table grid
+
+        WebElement chekDepositComment = driver.findElementById("depositsTable");
+
+
 
         // option2 - use custom "expected condition" of WebDriver framework
         WebDriverWait wait = new WebDriverWait(driver, 2);     // timeout after 2 seconds
@@ -79,7 +82,7 @@ public class DepositListingTest {
                     String innerHTML = firstRow.getAttribute("innerHTML");
 
                     if (innerHTML.contains(uuid)) {
-                        assertTrue(innerHTML.contains("10-30-18"));    // beware, different date format in table grid vs. input field
+                        assertTrue(innerHTML.contains("Unique-Deposit-"));    // beware, different date format in table grid vs. input field
                         assertTrue(innerHTML.contains(depositComment));
                         return true;     // expected condition is met
                     } else {
