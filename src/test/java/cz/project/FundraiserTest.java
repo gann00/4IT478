@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class FundraiserTest {
     private ChromeDriver driver;
+    private LoginTest loginTest = new LoginTest();
 
     @Before
     public void setup() {
@@ -29,32 +30,14 @@ public class FundraiserTest {
     @After
     public void tearDown() {
 
-        //driver.close();
+     driver.close();
     }
 
-    @Test
-    public void shouldLoginUsingValidCredentials() {
-        // given
-        driver.get("http://digitalnizena.cz/church/");
-
-        // when
-        WebElement usernameInput = driver.findElement(By.id("UserBox"));
-        usernameInput.sendKeys("church");
-        WebElement passwordInput = driver.findElement(By.id("PasswordBox"));
-        passwordInput.sendKeys("church12345");
-        WebElement loginButton = driver.findElement(By.className("btn-primary"));
-        loginButton.click();
-        // Then
-        assertEquals("http://digitalnizena.cz/church/Menu.php", driver.getCurrentUrl());
-        assertEquals("ChurchCRM: Welcome to", driver.getTitle());
-        assertTrue(driver.findElements(By.id("Login")).isEmpty());
-
-    }
 
     @Test
     public void creatingFundRaiser() {
         // GIVEN
-        shouldLoginUsingValidCredentials();
+        loginTest.login(driver);
 
         // WHEN
         driver.get("http://digitalnizena.cz/church/FundRaiserEditor.php?FundRaiserID=-1");
@@ -77,8 +60,10 @@ public class FundraiserTest {
         clickSaveFundRaiser.click();
 
 
+        WebElement search = driver.findElement(By.cssSelector("#listEvents_filter > label > input[type=search]"));
+        search.sendKeys("vše");
+
+
+
     }
-
-
-
 }

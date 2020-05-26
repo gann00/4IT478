@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 public class DepositListingTest {
     private ChromeDriver driver;
+    private LoginTest loginTest = new LoginTest();
 
     @Before
     public void setup() {
@@ -40,7 +41,7 @@ public class DepositListingTest {
     @Test
     public void given_userIsLoggedIn_when_userAddsNewDeposit_then_depositRecordIsShownInDepositTableGrid() {
         // GIVEN user is logged in
-        shouldLoginUsingValidCredentials();
+        loginTest.login(driver);
 
        // WHEN user adds deposit comment
        driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
@@ -71,7 +72,14 @@ public class DepositListingTest {
         WebDriverWait wait = new WebDriverWait(driver, 2);
         WebElement searchDepositComment = driver.findElementByCssSelector("#depositsTable_wrapper #depositsTable tbody tr");
 
+        WebElement searchInput = driver.findElement(By.cssSelector("#depositsTable_filter input"));
+        searchInput.sendKeys("Unique-Deposit-");
 
+        List<WebElement> elements = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr"));
+        WebElement depositTableRow = elements.get(0);
+        Assert.assertEquals("Unique-Deposit-", depositTableRow.getText());
+        // driver.close();
+    }
       //  WebDriverWait wait = new WebDriverWait(driver, 2);
       //  wait.until(ExpectedCondition<boolean>)webDriver -> {
       //      List<WebElement> depositRows = driver.findElementsByCssSelector("#depositsTable_wrapper #depositsTable tbody tr");
@@ -100,15 +108,13 @@ public class DepositListingTest {
 
 
 
-    }
-
 
 
 
 
 
     public void deleteDeposits() throws InterruptedException {
-        shouldLoginUsingValidCredentials();
+        loginTest.login(driver);
 
         driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
 
@@ -133,24 +139,5 @@ public class DepositListingTest {
         // we have our test correct, so it good that test fails!
         Assert.assertFalse(deleteButton.isEnabled());
     }
-
-    private void shouldLoginUsingValidCredentials() {
-
-        driver.get("http://digitalnizena.cz/church/");
-
-        // when
-        WebElement usernameInput = driver.findElement(By.id("UserBox"));
-        usernameInput.sendKeys("church");
-        WebElement passwordInput = driver.findElement(By.id("PasswordBox"));
-        passwordInput.sendKeys("church12345");
-        WebElement loginButton = driver.findElement(By.className("btn-primary"));
-        loginButton.click();
-
-        // Then
-        assertEquals("http://digitalnizena.cz/church/Menu.php", driver.getCurrentUrl());
-        assertEquals("ChurchCRM: Welcome to", driver.getTitle());
-        assertTrue(driver.findElements(By.id("Login")).isEmpty());
-    }
-
-
 }
+
