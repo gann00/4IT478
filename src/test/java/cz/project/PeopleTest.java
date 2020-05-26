@@ -95,6 +95,33 @@ public class PeopleTest {
       //  WebElement errorMessageSpan1 = driver.findElement(By.cssSelector(".col-md-4 .font"));
        // Assert.assertEquals("red", errorMessageSpan1.getText());
     }
+    @Test
+    public void AddingPerson() {
+        // Given
+        shouldLoginUsingValidCredentials();
 
+        // When
+        // Go through menu to People
+        WebElement peopleMenu = driver.findElement(By.className("fa-users"));
+        peopleMenu.click();
+        //WebElement addPeopleMenu = driver.findElement(By.xpath("/html/body/div/aside[1]/section/ul/li[3]/ul/li[2]"));
+        //addPeopleMenu.click();
+        driver.get("http://digitalnizena.cz/church/PersonEditor.php");
+
+        //Add new person
+        WebElement genderSelectElement = driver.findElement(By.name("Gender"));
+        Select genderSelect = new Select(genderSelectElement);
+        genderSelect.selectByVisibleText("Male");
+
+        WebElement firstNameInput = driver.findElement(By.id("FirstName"));
+        firstNameInput.sendKeys("Jan");
+
+        WebElement personSaveButton = driver.findElement(By.id("PersonSaveButton"));
+        personSaveButton.click();
+
+        // Then
+
+
+    }
 }
 
