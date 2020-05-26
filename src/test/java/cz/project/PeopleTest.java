@@ -137,27 +137,14 @@ public class PeopleTest {
 
         WebElement personEditSave = driver.findElement(By.id("PersonSaveButton"));
         personEditSave.click();
-        driver.close();
-    }
-    @Test
-    public void editsSaved() {
-        // Given
-        loginTest.login(driver);
+
         //Check if edits were saved
-        driver.get("http://digitalnizena.cz/church/PersonView.php?PersonID=144");
         WebElement emailSaved= driver.findElement(By.cssSelector("body > div > div.content-wrapper > section.content > div.row > div.col-lg-3.col-md-3.col-sm-3 > div:nth-child(2) > div.box-body > ul > li:nth-child(4) > span > a"));
         Assert.assertEquals("janesmith@email.com", emailSaved.getText());
         WebElement roleSaved = driver.findElement(By.className("text-muted"));
         Assert.assertEquals("Head of Household  ", roleSaved.getText());
-        driver.close();
-    }
 
-    @Test
-    public void checkEditHistory() {
-        loginTest.login(driver);
         //Check edit history
-        driver.get("http://digitalnizena.cz/church/PersonView.php?PersonID=129");
-
         WebElement history = driver.findElement(By.className("timeline-header"));
         Assert.assertEquals("Updated by Church Admin", history.getText());
         driver.close();
