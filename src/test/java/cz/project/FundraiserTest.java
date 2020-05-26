@@ -1,22 +1,19 @@
 package cz.project;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class EventTest {
+public class FundraiserTest {
     private ChromeDriver driver;
 
     @Before
@@ -31,7 +28,8 @@ public class EventTest {
 
     @After
     public void tearDown() {
-//        driver.close();
+
+        //driver.close();
     }
 
     @Test
@@ -54,50 +52,29 @@ public class EventTest {
     }
 
     @Test
-    public void addingEventAndTextInRichTextEditor() {
+    public void creatingFundRaiser() {
         // GIVEN
         shouldLoginUsingValidCredentials();
 
-
         // WHEN
-        driver.get("http://digitalnizena.cz/church/EventEditor.php");
-
-        // Event type selection
-        WebElement eventButton = driver.findElement(By.id("event_type_id"));
-        eventButton.click();
-
-        // Filling in details
-        WebElement eventType = driver.findElement(By.cssSelector("#event_type_id > option:nth-child(5)"));
-        eventType.click();
-
-        WebElement eventTitle = driver.findElement(By.name("EventTitle"));
-        eventTitle.clear();
-        eventTitle.sendKeys("VŠE");
-
-        WebElement eventDesc = driver.findElement(By.name("EventDesc"));
-        eventDesc.sendKeys("Vysoká škola ekonomická");
-
-
-        // Filling in Rich text editor
-//        driver.findElement(By.xpath("/html/body")).sendKeys("Check");
-
-
-        // Save Changes
-        WebElement saveChanges = driver.findElement(By.name("SaveChanges"));
-        saveChanges.click();
-
-        // Search vše
-        WebElement search = driver.findElement(By.cssSelector("#listEvents_filter > label > input[type=search]"));
-        search.sendKeys("vše");
-
-        // Edit Church Event
-        WebElement edit = driver.findElement(By.name("Action"));
-        edit.click();
-
+        driver.get("http://digitalnizena.cz/church/FundRaiserEditor.php?FundRaiserID=-1");
 
         // THEN
-        // Check Filling in Rich text editor
+        // Create Fund Raiser
+        WebElement donationDateInput = driver.findElement(By.name("Date"));
+        donationDateInput.click();
+        donationDateInput.clear();
+        donationDateInput.sendKeys("2020-05-27");
 
+        WebElement inputTitle = driver.findElement(By.id("Title"));
+        String uuid = UUID.randomUUID().toString();
+        inputTitle.sendKeys("Oblečení " + uuid);
+
+        WebElement inputDescription = driver.findElement(By.id("Description"));
+        inputDescription.sendKeys("Fund raiser oblečení");
+
+        WebElement clickSaveFundRaiser = driver.findElement(By.name("FundRaiserSubmit"));
+        clickSaveFundRaiser.click();
 
 
     }
