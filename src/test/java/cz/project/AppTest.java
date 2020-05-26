@@ -18,6 +18,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Unit test for simple App.
  */
@@ -70,6 +73,11 @@ public class AppTest {
         passwordInput.sendKeys("church12345");
         WebElement loginButton = driver.findElement(By.className("btn-primary"));
         loginButton.click();
+        // Then
+        assertEquals("http://digitalnizena.cz/church/Menu.php", driver.getCurrentUrl());
+        assertEquals("ChurchCRM: Welcome to", driver.getTitle());
+        assertTrue(driver.findElements(By.id("Login")).isEmpty());
+
     }
 
     @Test
@@ -97,9 +105,7 @@ public class AppTest {
 
     // option2 - use custom "expected condition" of WebDriver framework
     WebDriverWait wait = new WebDriverWait(driver, 2);     // timeout after 2 seconds
-        wait.until(new ExpectedCondition<Boolean>() {
-        @Override
-        public Boolean apply(WebDriver webDriver) {
+        wait.until((ExpectedCondition<Boolean>) webDriver -> {
             // each time, we try to get the very first row from table grid and check, if contains the last record
 
             List<WebElement> depositRows = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr"));
@@ -107,14 +113,13 @@ public class AppTest {
             String innerHTML = firstRow.getAttribute("innerHTML");
 
             if (innerHTML.contains(uuid)) {
-                Assert.assertTrue(innerHTML.contains("10-30-18"));    // beware, different date format in table grid vs. input field
-                Assert.assertTrue(innerHTML.contains(depositComment));
+                assertTrue(innerHTML.contains("10-30-18"));    // beware, different date format in table grid vs. input field
+                assertTrue(innerHTML.contains(depositComment));
                 return true;     // expected condition is met
             } else {
                 return false;    // selenium webdriver will continue polling the DOM each 500ms and check the expected condition by calling method apply(webDriver) again
             }
         }
-    }
         );}
 
     public void deleteDeposits() throws InterruptedException {
@@ -144,29 +149,65 @@ public class AppTest {
         Assert.assertFalse(deleteButton.isEnabled());
     }
 
+
     @Test
-    public void userExistsInSystem_whenUserLogsWithValidPassword_thenUserIsLoggedIntoDashboard() {
+    public void AddingPersonFail_EmptyFamilyNameAndLastName() {
         // Given
-        driver.get("http://digitalnizena.cz/church/");
+        shouldLoginUsingValidCredentials();
 
-        // when
-        WebElement usernameInput = driver.findElement(By.cssSelector("#UserBox"));
-        usernameInput.sendKeys("church");
+        // When
+        // Go through menu to People (rewrite - should get to adding person through Menu)
+        driver.get("http://digitalnizena.cz/church/PersonEditor.php");
 
-        WebElement passwordInput = driver.findElement(By.id("PasswordBox"));
-        passwordInput.sendKeys("church12345");
+        //Add new person
+        WebElement genderSelectElement = driver.findElement(By.name("Gender"));
+        Select genderSelect = new Select(genderSelectElement);
+        genderSelect.selectByVisibleText("Male");
 
-        WebElement loginButton = driver.findElement(By.cssSelector(".btn-primary"));
-        loginButton.click();
+        WebElement firstNameInput = driver.findElement(By.id("FirstName"));
+        firstNameInput.sendKeys("Jan");
+
+        WebElement personSaveButton = driver.findElement(By.id("PersonSaveButton"));
+        personSaveButton.click();
 
         // Then
-        Assert.assertTrue(driver.getCurrentUrl().equals("https://digitalnizena.cz/church/Menu.php"));
-        Assert.assertTrue(driver.getTitle().equals("ChurchCRM: Welcome to"));
-        Assert.assertTrue(driver.findElements(By.id("Login")).isEmpty());
+        //validation error
 
+        WebElement errorMessageSpan = driver.findElement(By.cssSelector(".alert-danger"));
+        Assert.assertEquals("×\n" +
+                "Invalid fields or selections. Changes not saved! Please correct and try again!", errorMessageSpan.getText());
+
+        WebElement errorMessageSpan1 = driver.findElement(By.cssSelector(".col-md-4 .font"));
+        Assert.assertEquals("red", errorMessageSpan1.getText());
+    }
+
+    @Test
+    public void family() {
+        // Add family,
+        // Přidat osobu, (klidně přecházet přes url), nevyplnit Last name , ale vybrat Family
+        // 1) ověřit detail přidané osoby
+        // 2 ) editovat osobu, změnit nějaký udaj (př. telefon) a uložit danou sekci
+        // 3 ) ověřit že na detailu osoby se propsala nová informace
+        // 4) ověřit že přibyla položky v timeline historie editací
+        // 5)  Person Listings, že osoba se přidala
+    }
+
+    @Test
+    public void event() {
+        // Přidání Church eventu,
+        // vybrat event type,
+        // a následně vyplnit detaily, hlavně vyplnit něco do rich text edotoru,
+        // v gridu ověřit přidání záznamu,
+        // rozklidknout editaci nově přidaného záznamu
+        // a ověřit že v richtext editoru je hodnota
     }
 
 
+    @Test
+    public void ownCase() {
+
+        //  jakykoliv svuj test case
+    }
 
 
 }
