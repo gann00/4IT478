@@ -8,10 +8,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class FundraiserTest {private ChromeDriver driver;
+public class FundraiserTest {
+    private ChromeDriver driver;
 
     @Before
     public void setup() {
@@ -21,7 +24,8 @@ public class FundraiserTest {private ChromeDriver driver;
 //        ChromeDriverService service = new ChromeDriverService()
         driver = new ChromeDriver(cho);
         driver.manage().window().maximize();
-}
+    }
+
     @After
     public void tearDown() {
 
@@ -48,7 +52,7 @@ public class FundraiserTest {private ChromeDriver driver;
     }
 
     @Test
-    public void creatingFundRaiser () {
+    public void creatingFundRaiser() {
         // GIVEN
         shouldLoginUsingValidCredentials();
 
@@ -62,14 +66,17 @@ public class FundraiserTest {private ChromeDriver driver;
         donationDateInput.clear();
         donationDateInput.sendKeys("2020-05-27");
 
-        WebElement fundTitle = driver.findElement(By.name("Title"));
-        fundTitle.click();
-        fundTitle.clear();
-        fundTitle.sendKeys("Kolo");
+        WebElement inputTitle = driver.findElement(By.id("Title"));
+        String uuid = UUID.randomUUID().toString();
+        inputTitle.sendKeys("Oblečení " + uuid);
+
+        WebElement inputDescription = driver.findElement(By.id("Description"));
+        inputDescription.sendKeys("Fund raiser oblečení");
+
+        WebElement clickSaveFundRaiser = driver.findElement(By.name("FundRaiserSubmit"));
+        clickSaveFundRaiser.click();
+
+
     }
 
-
-
-
-
-    }
+}
