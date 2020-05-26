@@ -49,9 +49,9 @@ public class DepositListingTest {
         driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
 
         //100 zázmaov
-       // WebElement recordsLenghtElement = driver.findElement(By.id("depositsTable_length"));
-       // Select recordsLenght = new Select(recordsLenghtElement);
-       // recordsLenght.selectByValue("100");
+       WebElement recordsLenghtElement = driver.findElement(By.name("depositsTable_length"));
+       Select recordsLenght = new Select(recordsLenghtElement);
+       recordsLenght.selectByValue("100");
 
 
         WebElement depositCommentInput = driver.findElement(By.cssSelector("#depositComment"));
@@ -62,7 +62,7 @@ public class DepositListingTest {
         WebElement depositDateInput = driver.findElement(By.cssSelector("#depositDate"));
         depositDateInput.click();
         depositDateInput.clear();
-        depositDateInput.sendKeys("2020-05-26");
+        depositDateInput.sendKeys("2020-05-27");
 
         WebElement addDepositButton = driver.findElement(By.cssSelector("#addNewDeposit"));
         addDepositButton.click();
