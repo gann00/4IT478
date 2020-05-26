@@ -93,6 +93,7 @@ public class PeopleTest {
                 "Invalid fields or selections. Changes not saved! Please correct and try again!", errorMessageSpan.getText());
         WebElement errorMessageSpan1 = driver.findElementByCssSelector(".col-md-4 > font");
         Assert.assertEquals("You must enter a Last Name if no Family is selected.", errorMessageSpan1.getText());
+        driver.close();
     }
 
     @Test
@@ -102,42 +103,51 @@ public class PeopleTest {
 
         // When
         // Adding Family
-        driver.get("http://digitalnizena.cz/church/FamilyEditor.php");
-        WebElement familyName = driver.findElement(By.id("FamilyName"));
-        familyName.sendKeys("Smith");
+        //driver.get("http://digitalnizena.cz/church/FamilyEditor.php");
+        //WebElement familyName = driver.findElement(By.id("FamilyName"));
+        //familyName.sendKeys("Smith");
 
-        WebElement cityInput = driver.findElement(By.name("City"));
-        cityInput.sendKeys("Prague");
+        //WebElement cityInput = driver.findElement(By.name("City"));
+        //cityInput.sendKeys("Prague");
 
-        WebElement personSaveButton = driver.findElement(By.name("FamilySubmit"));
-        personSaveButton.click();
+        //WebElement personSaveButton = driver.findElement(By.name("FamilySubmit"));
+        //personSaveButton.click();
 
         //Adding Person with family and with empty Last name
         driver.get("http://digitalnizena.cz/church/PersonEditor.php");
 
         WebElement genderSelectElement = driver.findElement(By.name("Gender"));
         Select genderSelect = new Select(genderSelectElement);
-        genderSelect.selectByVisibleText("Male");
+        genderSelect.selectByVisibleText("Female");
 
         WebElement firstName = driver.findElement(By.id("FirstName"));
         firstName.sendKeys("Jane");
 
-        //WebElement familyNameSelectElement = driver.findElement(By.id("famailyId"));
-        //Select familyNameSelect = new Select(familyNameSelectElement);
-        //familyNameSelect.selectByValue("30");
-
         WebElement familyNameSelectElement = driver.findElement(By.id("famailyId"));
         Select familyNameSelect = new Select(familyNameSelectElement);
-        familyNameSelect.selectByVisibleText("Simpsonovi&nbsp;");
+        familyNameSelect.selectByValue("12");
 
         WebElement personSave = driver.findElement(By.id("PersonSaveButton"));
         personSave.click();
 
-
         //Check detail of added person
+        WebElement nameTask = driver.findElement(By.className("profile-username"));
+        Assert.assertTrue(nameTask.getText().equals("Jane Smith"));
+
         //Edit information of added person
+        WebElement personEditButton = driver.findElement(By.id("EditPerson"));
+        personEditButton.click();
+
+        WebElement genderSelectElemen = driver.findElement(By.name("Gender"));
+        Select genderSelect = new Select(genderSelectElement);
+        genderSelect.selectByVisibleText("Female");
+
+        WebElement firstName = driver.findElement(By.id("FirstName"));
+        firstName.sendKeys("Jane");
         //Check if edits were saved
+
         //Check edit history
+
         //Person Listings - check if person where added
 
         WebElement peopleMenu = driver.findElement(By.className("fa-users"));
@@ -149,7 +159,17 @@ public class PeopleTest {
 
         // Then
 
+        driver.get("http://digitalnizena.cz/church/v2/people");
 
+        WebElement searchInput = driver.findElement(By.cssSelector("#members_filter input"));
+        searchInput.sendKeys("Jane Smith");
+
+        List<WebElement> elements = driver.findElements(By.cssSelector("table#members tr"));
+        Assert.assertEquals(2, elements.size());
+
+        WebElement personTableRow = elements.get(0);
+        Assert.assertTrue(personTableRow.getText().contains("Smith"));
+       // driver.close();
     }
 }
 
