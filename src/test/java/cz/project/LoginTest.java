@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Unit test for simple App.
  */
-public class Login {
+public class LoginTest {
     private ChromeDriver driver;
 
     @Before
@@ -39,11 +39,11 @@ public class Login {
 
     @After
     public void tearDown() {
-//        driver.close();
+      driver.close();
     }
 
     @Test
-    public void InvalidLoginUsingInvalidUsernameAndInvalidPassword_userStaysAtLoginPage() {
+    public void invalidLoginUsingInvalidUsernameAndInvalidPassword_userStaysAtLoginPage() {
         // given
         driver.get("http://digitalnizena.cz/church/");
 
