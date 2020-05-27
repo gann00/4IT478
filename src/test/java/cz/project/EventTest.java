@@ -13,6 +13,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -54,23 +57,31 @@ public class EventTest {
 
         WebElement eventTitle = driver.findElement(By.name("EventTitle"));
         eventTitle.clear();
-        eventTitle.sendKeys("VŠE");
+        String uuid = UUID.randomUUID().toString();
+        eventTitle.sendKeys("VŠE " + uuid);
 
         WebElement eventDesc = driver.findElement(By.name("EventDesc"));
         eventDesc.sendKeys("Vysoká škola ekonomická");
 
-
         // Filling in Rich text editor
-//        driver.findElement(By.xpath("/html/body")).sendKeys("Check");
+//        WebElement iframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
+//        driver.switchTo().frame(iframe);
+//        WebElement inputRichText = driver.findElement(By.cssSelector("body"));
+//        inputRichText.click();
+//        inputRichText.sendKeys("Check");
+//        driver.switchTo().defaultContent();
 
 
         // Save Changes
         WebElement saveChanges = driver.findElement(By.name("SaveChanges"));
         saveChanges.click();
 
-        // Search vše
+        // Search VSE and Compare
         WebElement search = driver.findElement(By.cssSelector("#listEvents_filter > label > input[type=search]"));
-        search.sendKeys("vše");
+        search.sendKeys("VŠE " + uuid);
+
+        WebElement titleSaved = driver.findElement(By.cssSelector("#listEvents > tbody > tr > td:nth-child(2)"));
+        Assert.assertEquals("VŠE " + uuid + " Vysoká škola ekonomická", titleSaved.getText());
 
         // Edit Church Event
         WebElement edit = driver.findElement(By.name("Action"));
