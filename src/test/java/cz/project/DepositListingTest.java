@@ -39,7 +39,7 @@ public class DepositListingTest {
     }
 
     @Test
-    public void given_userIsLoggedIn_when_userAddsNewDeposit_then_depositRecordIsShownInDepositTableGrid() {
+    public void given_userIsLoggedIn_when_userAddsNewDeposit_then_depositRecordIsShownInDepositTableGrid() throws InterruptedException {
         // GIVEN user is logged in
         loginTest.login(driver);
 
@@ -47,6 +47,9 @@ public class DepositListingTest {
        driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
 
        //Display 100 records
+
+        Thread.sleep(2000);
+
        WebElement recordsLenghtElement = driver.findElementByName("depositsTable_length");
        Select recordsLenght = new Select(recordsLenghtElement);
        recordsLenght.selectByValue("100");
@@ -75,9 +78,9 @@ public class DepositListingTest {
         WebElement searchInput = driver.findElement(By.cssSelector("#depositsTable_filter input"));
         searchInput.sendKeys("Unique-Deposit-");
 
-        List<WebElement> elements = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr"));
+        List<WebElement> elements = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr td:nth-child(4)"));
         WebElement depositTableRow = elements.get(0);
-        Assert.assertEquals("Unique-Deposit-", depositTableRow.getText());
+        Assert.assertEquals("Unique-Deposit-" + uuid, depositTableRow.getText());
         // driver.close();
     }
       //  WebDriverWait wait = new WebDriverWait(driver, 2);
