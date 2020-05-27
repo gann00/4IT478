@@ -35,7 +35,7 @@ public class EventTest {
 
     @After
     public void tearDown() {
-//        driver.close();
+        driver.close();
     }
 
     @Test
@@ -63,13 +63,13 @@ public class EventTest {
         WebElement eventDesc = driver.findElement(By.name("EventDesc"));
         eventDesc.sendKeys("Vysoká škola ekonomická");
 
-        // Filling in Rich text editor
-//        WebElement iframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
-//        driver.switchTo().frame(iframe);
-//        WebElement inputRichText = driver.findElement(By.cssSelector("body"));
-//        inputRichText.click();
-//        inputRichText.sendKeys("Check");
-//        driver.switchTo().defaultContent();
+        //Filling in Rich text editor
+        //WebElement iframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
+        //driver.switchTo().frame(iframe);
+        //WebElement inputRichText = driver.findElement(By.cssSelector("body"));
+        //inputRichText.click();
+        //inputRichText.sendKeys("Check");
+        //driver.switchTo().defaultContent();
 
 
         // Save Changes

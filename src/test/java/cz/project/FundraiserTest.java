@@ -59,10 +59,17 @@ public class FundraiserTest {
         WebElement clickSaveFundRaiser = driver.findElement(By.name("FundRaiserSubmit"));
         clickSaveFundRaiser.click();
 
+        //Add Donated Item
+        WebElement addDonatedItem = driver.findElementByName("AddDonatedItem");
+        addDonatedItem.click();
+        WebElement addItem = driver.findElementById("Item");
+        addItem.sendKeys("triko");
 
-        WebElement search = driver.findElement(By.cssSelector("#listEvents_filter > label > input[type=search]"));
-        search.sendKeys("vše");
+        WebElement addDescription = driver.findElementByName("Description");
+        addDescription.sendKeys("Pánske triko");
 
+        WebElement saveDonateItem = driver.findElementByName("DonatedItemSubmit");
+        saveDonateItem.click();
 
 
     }
