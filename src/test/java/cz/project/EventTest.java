@@ -64,12 +64,17 @@ public class EventTest {
         eventDesc.sendKeys("Vysoká škola ekonomická");
 
         //Filling in Rich text editor
-        //WebElement iframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
-        //driver.switchTo().frame(iframe);
-        //WebElement inputRichText = driver.findElement(By.cssSelector("body"));
-        //inputRichText.click();
-        //inputRichText.sendKeys("Check");
-        //driver.switchTo().defaultContent();
+        // Option 1 Working
+        WebElement iframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
+        driver.switchTo().frame(iframe);
+        WebElement inputRichText = driver.findElement(By.cssSelector("body"));
+        inputRichText.click();
+        inputRichText.sendKeys("Check rich text editor");
+        driver.switchTo().parentFrame();
+
+        // Option 2 Not working
+        //((JavascriptExecutor)driver).executeScript("document.getElementsByName('EventText')[0].style.display='inline'");
+        //driver.findElement(By.name("EventText")).sendKeys("Check rich text editor");
 
 
         // Save Changes
@@ -81,11 +86,11 @@ public class EventTest {
         search.sendKeys("VŠE " + uuid);
 
         WebElement titleSaved = driver.findElement(By.cssSelector("#listEvents > tbody > tr > td:nth-child(2)"));
-        Assert.assertEquals("VŠE " + uuid + " Vysoká škola ekonomická", titleSaved.getText());
+        Assert.assertEquals("VŠE " + uuid + " Vysoká škola ekonomická\nSermon Text", titleSaved.getText());
 
         // Edit Church Event
-        WebElement edit = driver.findElement(By.name("Action"));
-        edit.click();
+        WebElement editButton = driver.findElement(By.cssSelector("[data-original-title='Edit']"));
+        editButton.click();
 
 
         // THEN
