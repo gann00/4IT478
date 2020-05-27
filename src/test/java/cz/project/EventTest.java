@@ -39,7 +39,7 @@ public class EventTest {
     }
 
     @Test
-    public void addingEventAndTextInRichTextEditor() {
+    public void shouldAddingEventAndTextInRichTextEditor() throws InterruptedException {
         // GIVEN
         loginTest.login(driver);
 
@@ -51,20 +51,23 @@ public class EventTest {
         WebElement eventButton = driver.findElement(By.id("event_type_id"));
         eventButton.click();
 
-        // Filling in details
-        WebElement eventType = driver.findElement(By.cssSelector("#event_type_id > option:nth-child(5)"));
+        // Choose Event Type
+        WebElement eventType = driver.findElement(By.cssSelector("#event_type_id > option:nth-child(6)"));
         eventType.click();
 
+        // Filling in Event Title
         WebElement eventTitle = driver.findElement(By.name("EventTitle"));
         eventTitle.clear();
         String uuid = UUID.randomUUID().toString();
         eventTitle.sendKeys("VŠE " + uuid);
 
+        // Filling in Event Description
         WebElement eventDesc = driver.findElement(By.name("EventDesc"));
         eventDesc.sendKeys("Vysoká škola ekonomická");
 
         //Filling in Rich text editor
-        // Option 1 Working
+           // Option 1 Working
+        Thread.sleep(3000);
         WebElement iframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
         driver.switchTo().frame(iframe);
         WebElement inputRichText = driver.findElement(By.cssSelector("body"));
@@ -72,7 +75,7 @@ public class EventTest {
         inputRichText.sendKeys("Check rich text editor");
         driver.switchTo().parentFrame();
 
-        // Option 2 Not working
+           // Option 2 Not working
         //((JavascriptExecutor)driver).executeScript("document.getElementsByName('EventText')[0].style.display='inline'");
         //driver.findElement(By.name("EventText")).sendKeys("Check rich text editor");
 
@@ -81,7 +84,7 @@ public class EventTest {
         WebElement saveChanges = driver.findElement(By.name("SaveChanges"));
         saveChanges.click();
 
-        // Search VSE and Compare
+        // Search VSE and verification
         WebElement search = driver.findElement(By.cssSelector("#listEvents_filter > label > input[type=search]"));
         search.sendKeys("VŠE " + uuid);
 
@@ -95,9 +98,9 @@ public class EventTest {
 
         // THEN
         // Check Filling in Rich text editor
-
-
-
+//        WebElement savedIframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
+//        WebElement savedInputRichText = driver.switchTo().frame(savedIframe).findElement(By.cssSelector("p"));
+//        Assert.assertEquals("Check rich text editor", savedInputRichText.getText());
     }
 
 }
