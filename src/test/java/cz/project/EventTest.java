@@ -39,7 +39,7 @@ public class EventTest {
     }
 
     @Test
-    public void addingEventAndTextInRichTextEditor() {
+    public void shouldAddingEventAndTextInRichTextEditor() throws InterruptedException {
         // GIVEN
         loginTest.login(driver);
 
@@ -51,48 +51,56 @@ public class EventTest {
         WebElement eventButton = driver.findElement(By.id("event_type_id"));
         eventButton.click();
 
-        // Filling in details
-        WebElement eventType = driver.findElement(By.cssSelector("#event_type_id > option:nth-child(5)"));
+        // Choose Event Type
+        WebElement eventType = driver.findElement(By.cssSelector("#event_type_id > option:nth-child(6)"));
         eventType.click();
 
+        // Filling in Event Title
         WebElement eventTitle = driver.findElement(By.name("EventTitle"));
         eventTitle.clear();
         String uuid = UUID.randomUUID().toString();
         eventTitle.sendKeys("VŠE " + uuid);
 
+        // Filling in Event Description
         WebElement eventDesc = driver.findElement(By.name("EventDesc"));
         eventDesc.sendKeys("Vysoká škola ekonomická");
 
         //Filling in Rich text editor
-        //WebElement iframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
-        //driver.switchTo().frame(iframe);
-        //WebElement inputRichText = driver.findElement(By.cssSelector("body"));
-        //inputRichText.click();
-        //inputRichText.sendKeys("Check");
-        //driver.switchTo().defaultContent();
+           // Option 1 Working
+        Thread.sleep(3000);
+        WebElement iframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
+        driver.switchTo().frame(iframe);
+        WebElement inputRichText = driver.findElement(By.cssSelector("body"));
+        inputRichText.click();
+        inputRichText.sendKeys("Check rich text editor");
+        driver.switchTo().parentFrame();
+
+           // Option 2 Not working
+        //((JavascriptExecutor)driver).executeScript("document.getElementsByName('EventText')[0].style.display='inline'");
+        //driver.findElement(By.name("EventText")).sendKeys("Check rich text editor");
 
 
         // Save Changes
         WebElement saveChanges = driver.findElement(By.name("SaveChanges"));
         saveChanges.click();
 
-        // Search VSE and Compare
+        // Search VSE and verification
         WebElement search = driver.findElement(By.cssSelector("#listEvents_filter > label > input[type=search]"));
         search.sendKeys("VŠE " + uuid);
 
         WebElement titleSaved = driver.findElement(By.cssSelector("#listEvents > tbody > tr > td:nth-child(2)"));
-        Assert.assertEquals("VŠE " + uuid + " Vysoká škola ekonomická", titleSaved.getText());
+        Assert.assertEquals("VŠE " + uuid + " Vysoká škola ekonomická\nSermon Text", titleSaved.getText());
 
         // Edit Church Event
-        WebElement edit = driver.findElement(By.name("Action"));
-        edit.click();
+        WebElement editButton = driver.findElement(By.cssSelector("[data-original-title='Edit']"));
+        editButton.click();
 
 
         // THEN
         // Check Filling in Rich text editor
-
-
-
+//        WebElement savedIframe = driver.findElement(By.cssSelector("#cke_1_contents > iframe"));
+//        WebElement savedInputRichText = driver.switchTo().frame(savedIframe).findElement(By.cssSelector("p"));
+//        Assert.assertEquals("Check rich text editor", savedInputRichText.getText());
     }
 
 }
