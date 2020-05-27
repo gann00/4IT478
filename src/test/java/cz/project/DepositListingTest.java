@@ -47,9 +47,24 @@ public class DepositListingTest {
        driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
 
        //Display 100 records
-       WebElement recordsLenghtElement = driver.findElementByName("depositsTable_length");
-       Select recordsLenght = new Select(recordsLenghtElement);
-       recordsLenght.selectByValue("100");
+
+        WebElement recordsLenghtElement = driver.findElement(By.name("depositsTable_length"));
+        WebDriverWait wait1 = new WebDriverWait(driver, 5);
+        wait1.until(ExpectedConditions.visibilityOf(recordsLenghtElement));
+        recordsLenghtElement.click();
+        WebElement recordLenghtElements = driver.findElement(By.name("depositsTable_length"));
+        Select recordsLenghts = new Select(recordLenghtElements);
+        recordsLenghts.selectByValue("100");
+
+        //WebElement recordsLenghtElement = driver.findElement(By.id("depositsTable_length"));
+        //WebDriverWait wait1 = new WebDriverWait(driver, 2);
+        //wait1.until(ExpectedConditions.visibilityOf(recordsLenghtElement));
+        //Select recordsLenght = new Select(recordsLenghtElement);
+        //recordsLenght.selectByValue("100");
+
+       // WebElement recordsLenghtElement = driver.findElementByName("depositsTable_length");
+       // Select recordsLenght = new Select(recordsLenghtElement);
+       // recordsLenght.selectByValue("100");
 
         //Fill Deposit Comment
         WebElement depositCommentInput = driver.findElement(By.cssSelector("#depositComment"));
@@ -61,7 +76,7 @@ public class DepositListingTest {
         WebElement depositDateInput = driver.findElement(By.cssSelector("#depositDate"));
         depositDateInput.click();
         depositDateInput.clear();
-        depositDateInput.sendKeys("2020-05-27");
+        depositDateInput.sendKeys("2021-05-01");
 
         //Button click Add New Deposit
         WebElement addDepositButton = driver.findElement(By.cssSelector("#addNewDeposit"));
@@ -75,49 +90,34 @@ public class DepositListingTest {
         WebElement searchInput = driver.findElement(By.cssSelector("#depositsTable_filter input"));
         searchInput.sendKeys("Unique-Deposit-");
 
-        List<WebElement> elements = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr"));
+        List<WebElement> elements = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr td:nth-child(4)"));
         WebElement depositTableRow = elements.get(0);
         Assert.assertEquals("Unique-Deposit-", depositTableRow.getText());
+
+       // List<WebElement> elements = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr"));
+       // WebElement depositTableRow = elements.get(0);
+       // Assert.assertEquals("Unique-Deposit-", depositTableRow.getText());
         // driver.close();
+
+
+
+
+
     }
-      //  WebDriverWait wait = new WebDriverWait(driver, 2);
-      //  wait.until(ExpectedCondition<boolean>)webDriver -> {
-      //      List<WebElement> depositRows = driver.findElementsByCssSelector("#depositsTable_wrapper #depositsTable tbody tr");
-      //      WebElement firstRow = depositRows.get(0)
-        //    String innerHTML = firstRow.getAttribute("innerHTML");
-       // }
-   // }
-
-    // option2 - use custom "expected condition" of WebDriver framework
-    //WebDriverWait wait = new WebDriverWait(driver, 2);     // timeout after 2 seconds
-     //   wait.until((ExpectedCondition<Boolean>) webDriver -> {
-        // each time, we try to get the very first row from table grid and check, if contains the last record
-
-      //  List<WebElement> depositRows = driver.findElements(By.cssSelector("#depositsTable_wrapper #depositsTable tbody tr"));
-      //  WebElement firstRow = depositRows.get(0);
-      //  String innerHTML = firstRow.getAttribute("innerHTML");
-
-        // if (innerHTML.contains(uuid)) {
-        //    assertTrue(innerHTML.contains("Unique-Deposit-"));    // beware, different date format in table grid vs. input field
-        //    assertTrue(innerHTML.contains(depositComment));
-        //    return true;     // expected condition is met
-       // } else {
-        //    return false;    // selenium webdriver will continue polling the DOM each 500ms and check the expected condition by calling method apply(webDriver) again
-       // }
-      // );
+    //Added Deposit Detail
+    //WebElement addedDepositDetail = driver.findElementByClassName("sorting_1");
+    //addedDepositDetail.click();
 
 
 
-
-
-
-
-
+    @Test
+    //delete all rows in a grid
     public void deleteDeposits() throws InterruptedException {
+        //given
         loginTest.login(driver);
 
         driver.get("http://digitalnizena.cz/church/FindDepositSlip.php");
-
+        //than
         Thread.sleep(1000);
 
         List<WebElement> depositRows = driver.findElements(By.cssSelector("#depositsTable tbody tr"));
@@ -129,14 +129,11 @@ public class DepositListingTest {
         WebElement deleteButton = driver.findElement(By.cssSelector("#deleteSelectedRows"));
         deleteButton.click();
 
-        //TODO compare this WebElement confirmDeleteButton = driver.findElement(By.cssSelector(".modal-dialog .btn-primary"));
         WebElement confirmDeleteButton = driver.findElement(By.cssSelector(".modal-content > .modal-footer .btn-primary"));
         WebDriverWait wait = new WebDriverWait(driver, 1);
         wait.until(ExpectedConditions.visibilityOf(confirmDeleteButton));
         confirmDeleteButton.click();
-
-        // actually the application behaves incorrect => when delete all rows, Delete button should be disabled
-        // we have our test correct, so it good that test fails!
+        //than
         Assert.assertFalse(deleteButton.isEnabled());
     }
 }
