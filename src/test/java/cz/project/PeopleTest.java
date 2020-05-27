@@ -83,6 +83,7 @@ public class PeopleTest {
     public void addingFamily() {
         // Given
         loginTest.login(driver);
+
         // When
         // Adding Family
         driver.get("http://digitalnizena.cz/church/FamilyEditor.php");
@@ -120,6 +121,7 @@ public class PeopleTest {
         WebElement personSave = driver.findElement(By.id("PersonSaveButton"));
         personSave.click();
 
+        //Than
         //Check detail of added person
         WebElement nameTask = driver.findElement(By.className("profile-username"));
         Assert.assertTrue(nameTask.getText().equals("Jane Smith"));
@@ -152,13 +154,16 @@ public class PeopleTest {
 
     @Test
     public void personListings() {
+        // Given
         loginTest.login(driver);
         //Person Listings - check if person where added
         driver.get("http://digitalnizena.cz/church/v2/people");
 
+        // When
         WebElement searchInput = driver.findElement(By.cssSelector("#members_filter input"));
         searchInput.sendKeys("Jane Smith");
 
+        //Than
         List<WebElement> elements = driver.findElements(By.cssSelector("table#members tr"));
         WebElement personTableRow = elements.get(7);
         Assert.assertEquals("Smith Jane janesmith@email.com Female Unassigned Head of Household", personTableRow.getText());
